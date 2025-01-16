@@ -8,7 +8,7 @@ export const register = (req, res) => {
 
     db.query(q, [req.body.username], (err, data) => {
         if (err) return res.status(500).json(err);
-        if (data.length) return res.status(409).json("Utilisateur existe");
+        if (data.length) return res.status(409).json("Utilisateur existe déjà");
 
         // CREATE A NEW USER
         // HASH THE PASSWORD

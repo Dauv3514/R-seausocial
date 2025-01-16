@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-
+import axios from "axios";
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
@@ -9,15 +9,17 @@ export const AuthContextProvider = ({ children }) => {
         return storedUser ? JSON.parse(storedUser) : null;
       });
 
-  const login = () => {
-    // Simuler un appel API et mettre à jour l'état de l'utilisateur
-    const newUser = {
-      id: 1,
-      name: "Valentin Dauvier",
-      profilePic: "https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    };
-    console.log("Logging in user:", newUser);
-    setCurrentUser(newUser);
+  const login = async (inputs) => {
+    try {
+        const res = await axios.post("http://localhost:8800/api/auth/login", inputs, {
+            withCredentials: true,
+        });
+        setCurrentUser(res.data);
+        return res; // Assurez-vous de renvoyer la réponse
+    } catch (err) {
+        console.error("Erreur dans la fonction login:", err);
+        throw err; // Renvoyer l'erreur pour qu'elle soit capturée par handleLogin
+    }
   };
 
   useEffect(() => {
