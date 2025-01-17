@@ -25,17 +25,12 @@ const Share = () => {
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(
-    (newPost) => {
-      return makeRequest.post("/posts", newPost);
+  const mutation = useMutation({
+    mutationFn: (newPost) => makeRequest.post("/posts", newPost),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
     },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
+  });
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -77,20 +72,20 @@ const Share = () => {
             <label htmlFor="file">
               <div className="item">
                 <img src={Image} alt="" />
-                <span>Add Image</span>
+                <span>Ajouter une image</span>
               </div>
             </label>
             <div className="item">
               <img src={Map} alt="" />
-              <span>Add Place</span>
+              <span>Ajouter un lieu</span>
             </div>
             <div className="item">
               <img src={Friend} alt="" />
-              <span>Tag Friends</span>
+              <span>Tagger des amis</span>
             </div>
           </div>
           <div className="right">
-            <button onClick={handleClick}>Share</button>
+            <button onClick={handleClick}>Partager</button>
           </div>
         </div>
       </div>
