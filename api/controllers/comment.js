@@ -3,14 +3,17 @@ import jwt from "jsonwebtoken";
 import moment from "moment";
 
 export const getComments = async (req, res) => {
-    const q = `SELECT c.*, u.id AS userid, name, profilePic FROM comments AS c JOIN users AS u ON (u.id = c.userid)
-    WHERE c.postId = ? ORDER BY c.createdAt DESC`;
+    const q = `
+        SELECT c.*, u.id AS userid, u.name, u.profilePic
+        FROM comments AS c
+        JOIN users AS u ON (u.id = c.commentUserid)
+        WHERE c.postid = ?
+        ORDER BY c.createdAt DESC;
+    `;
     db.query(q, [req.query.postId], (err, data) => {
         if (err) {
-            console.log("Erreur requête SQL:", err);  // Affiche l'erreur SQL si elle se produit
             return res.status(500).json(err);
         }
-        console.log("Résultats de la requête:", data);  // Vérifie les résultats retournés par la requête
         return res.status(200).json(data);
     });
 }
@@ -24,21 +27,23 @@ export const addComment = (req, res) => {
             return res.status(403).json("Token pas valide");
         }
         
-        const q = "INSERT INTO comments (`desc`, `postid`, `createdAt`,`userId`) VALUES (?)";
+        const q = "INSERT INTO comments (`desc`, `commentUserid`, `createdAt`, `postid`) VALUES (?)";
         
         const values = [
             req.body.desc,
             userInfo.id,
             moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-            req.body.postId
+            req.body.postId.postId
         ];
+
+        console.log(values, 'valeurs');
         
         db.query(q, [values], (err, data) => {
             if (err) {
-                console.log("Erreur requête SQL:", err);  // Affiche l'erreur SQL si elle se produit
+                console.log("Erreur SQL:", err);  // Ajoutez un log pour l'erreur SQL
                 return res.status(500).json(err);
             }
-            console.log("Résultats de la requête:", data);  // Vérifie les résultats retournés par la requête
+            console.log("Données insérées:", data);  // Log des données retournées
             return res.status(200).json("Le commentaire a été crée");
         });
     });

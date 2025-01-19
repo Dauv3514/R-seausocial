@@ -16,7 +16,7 @@ import { makeRequest } from "../../axios";
 moment.locale('fr'); 
 
 const Post = ({ post }) => {
-  console.log(post.userId, 'teeet');
+  console.log("post est bien appelé");
   const [commentOpen, setCommentOpen] = useState(false);
 
   const {currentUser} = useContext(AuthContext);
@@ -25,9 +25,6 @@ const Post = ({ post }) => {
     queryKey: ["likes", post.id],
     queryFn: () => makeRequest.get("/likes?postId=" + post.id).then((res) => res.data),
   });
-  const handleLike = () =>{
-    mutation.mutate(data.includes(currentUser.id))
-  }
 
   const queryClient = useQueryClient();
 
@@ -40,6 +37,10 @@ const Post = ({ post }) => {
       queryClient.invalidateQueries(["likes"]);
     },
   });
+
+  const handleLike = () =>{
+    mutation.mutate(data.includes(currentUser.id))
+  }
 
   return (
     <div className="post">

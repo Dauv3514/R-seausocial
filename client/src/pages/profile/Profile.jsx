@@ -9,14 +9,16 @@ import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts"
+import { Update } from "/src/components/update/Update.jsx";
 import { useLocation } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { makeRequest } from "../../axios"
 
 const Profile = () => {
 
+  const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
 
   const userId = parseInt(useLocation().pathname.split("/")[2]);
@@ -28,22 +30,39 @@ const Profile = () => {
     queryFn: () => makeRequest.get("/users/find/" + userId).then((res) => res.data),
   });
 
-  console.log(data, 'test');
-
-  // const { isLoading: rIsLoading, data: relationshipData, isError } = useQuery({
-  //   queryKey: ["relationship", userId],
-  //   queryFn: () =>
-  //     makeRequest.get(`/relationships?followedUserId=${userId}`).then((res) => res.data),
-  // });
-
-  // console.log(relationshipData);
-
-  const handleFollow = () => {
-
+  const { data: relationshipData, isError, rIsLoading } = useQuery({
+    queryKey: ["relationship", userId],
+    queryFn: () =>
+    makeRequest.get("/relationships?followedUserId=" + userId).then((res) => res.data),
+  });
+  
+  if (error) {
+    console.log("Error:", error);
+    return <div>Error: {error.message}</div>;
   }
 
+  if (isError) {
+    console.log("Error:", isError);
+    return <div>Error: {error.message}</div>;
+  }
 
-  if (error) return <div>Error: {error.message}</div>;
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (following) => { 
+      if(following) return makeRequest.delete("/relationships?userId=" + userId);
+      return makeRequest.post("/relationships", { userId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["relationship"]);
+    },
+  });
+
+  const handleFollow = () =>{
+    mutation.mutate(relationshipData.includes(currentUser.id))
+  }
+
+  if (isError) return <div>Error: {isError.message}</div>;
 
 
   return (
@@ -83,10 +102,16 @@ const Profile = () => {
                 <span>{data.website}</span>
               </div>
             </div>
-            {userId === currentUser.id ? (
-              <button>Update</button>
+            {rIsLoading ? (
+                  "loading"
+            ) :userId === currentUser.id ? (
+              <button onClick={()=> setOpenUpdate(true)}>Update</button>
             ) : (
-              <button onClick={handleFollow}>Suivre</button>
+              <button onClick={handleFollow}> 
+                {relationshipData && relationshipData.includes(currentUser.id)
+                ? "Abonné"
+                : "Suivre"}
+              </button>
             )}
           </div>
           <div className="right">
@@ -94,8 +119,9 @@ const Profile = () => {
             <MoreVertIcon />
           </div>
         </div>
-      <Posts/>
+      <Posts userId={userId}/>
       </div></>}
+      {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data}/>}
     </div>
   );
 };

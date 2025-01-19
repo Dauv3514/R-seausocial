@@ -4,12 +4,11 @@ import { makeRequest } from '../../axios';
 import './posts.scss';
 import Post from '../post/Post';
 
-const fetchPosts = async () => {
-  const { data } = await makeRequest.get('posts');
-  return data;
-};
-
-const Posts = () => {
+const Posts = ({userId}) => {
+  const fetchPosts = async () => {
+    const { data } = await makeRequest.get("/posts?userId" + userId);
+    return data;
+  };
   const { data, error, isLoading } = useQuery({
     queryKey: ['posts'],
     queryFn: fetchPosts,
