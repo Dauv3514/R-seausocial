@@ -32,7 +32,7 @@ export const Update = ({setOpenUpdate, user}) => {
     const queryClient = useQueryClient();
   
     const mutation = useMutation({
-      mutationFn: (user) => makeRequest.put("/users", newPost),
+      mutationFn: (user) => makeRequest.put("/users", user),
       onSuccess: () => {
         queryClient.invalidateQueries(["user"]);
       },
@@ -40,10 +40,10 @@ export const Update = ({setOpenUpdate, user}) => {
   
     const handleClick = async (e) => {
       e.preventDefault();
-      let coverUrl = user.cover;
-      let profileUrl = user.profilePic;
-      coverUrl = cover && await upload(cover);
-      profileUrl = cover && await upload(profile);
+      let coverUrl;
+      let profileUrl;
+      coverUrl = cover ? await upload(cover) : user.coverPic;
+      profileUrl = cover ? await upload(profile) : user.profilePic;
 
 
       mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
@@ -52,15 +52,22 @@ export const Update = ({setOpenUpdate, user}) => {
 
     return (
     <div className="update">
-        <form>
-            <input type="file" />
-            <input type="file" />
-            <input type="text" name="name" onChange={handleChange}/>
-            <input type="text" name="city" onChange={handleChange}/>
-            <input type="text" name="website" onChange={handleChange}/>
-            <button onClick={handleClick}>Update</button>
-        </form>
-        <button onClick={()=>setOpenUpdate(false)}>X</button>
+        <div className="wrapper">
+            <h1>Mets a jour ton profil</h1>
+            <form>
+                <div className="files">
+                    <input type="file" id="cover" onChange={e=>setCover(e.target.files[0])}/>
+                    <input type="file" id="profile" onChange={e=>setProfile(e.target.files[0])}/>
+                    <input type="text" name="name" onChange={handleChange}/>
+                    <input type="text" name="city" onChange={handleChange}/>
+                    <input type="text" name="website" onChange={handleChange}/>
+                    <button onClick={handleClick}>Update</button>
+                </div>   
+            </form>
+            <button className="close" onClick={()=>setOpenUpdate(false)}>X</button>
+        </div>
     </div>
   )
 }
+
+

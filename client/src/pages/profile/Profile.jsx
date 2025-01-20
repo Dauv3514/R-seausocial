@@ -8,8 +8,8 @@ import PlaceIcon from "@mui/icons-material/Place";
 import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Posts from "../../components/posts/Posts"
-import { Update } from "/src/components/update/Update.jsx";
+import Posts from "../../components/posts/Posts";
+import { Update } from "../../components/update/Update";
 import { useLocation } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
@@ -68,8 +68,8 @@ const Profile = () => {
   return (
     <div className="profile">
       {isLoading ? "loading" : <><div className="images">
-            <img src={data.coverPic} alt="" className="cover" />
-            <img src={data.profilePic} alt="" className="profilePic" />
+            <img src={"/upload/"+ data.coverPic} alt="" className="cover" />
+            <img src={"/upload/"+ data.profilePic} alt="" className="profilePic" />
       </div>
       <div className="profileContainer">
         <div className="uInfo">
