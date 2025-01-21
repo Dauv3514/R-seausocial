@@ -52,6 +52,7 @@
               height: 40px;
               border-radius: 50%;
               object-fit: cover;
+              margin-right: 4px;
             }
 
             .online {
@@ -66,11 +67,13 @@
 
             p {
               color: themed("textColorSoft");
+              width: 150px;
             }
 
             span {
               font-weight: 500;
               color: themed("textColor");
+              display: flex;
             }
           }
 

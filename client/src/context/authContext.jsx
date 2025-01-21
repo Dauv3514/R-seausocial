@@ -23,13 +23,10 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("currentUser changed:", currentUser);
     if (currentUser) {
       localStorage.setItem("user", JSON.stringify(currentUser));
-      console.log("User saved to localStorage:", JSON.stringify(currentUser));
     } else {
       localStorage.removeItem("user");
-      console.log("User removed from localStorage");
     }
   }, [currentUser]);
 

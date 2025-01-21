@@ -45,8 +45,9 @@ export const Update = ({setOpenUpdate, user}) => {
       coverUrl = cover ? await upload(cover) : user.coverPic;
       profileUrl = cover ? await upload(profile) : user.profilePic;
 
-
-      mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
+      const updatedUser = { ...texts, coverPic: coverUrl, profilePic: profileUrl };
+      mutation.mutate(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
       setOpenUpdate(false);
     };
 

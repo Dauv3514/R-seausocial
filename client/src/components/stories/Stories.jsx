@@ -11,29 +11,29 @@ const Stories = () => {
     {
       id: 1,
       name: "Valentin Dauvier",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+      img: "https://images.pexels.com/photos/139162/pexels-photo-139162.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
     },
     {
       id: 2,
       name: "Valentin Dauvier",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+      img: "https://images.pexels.com/photos/139132/pexels-photo-139132.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
     },
     {
       id: 3,
       name: "Valentin Dauvier",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+      img: "https://images.pexels.com/photos/139134/pexels-photo-139134.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
     },
     {
       id: 4,
       name: "Valentin Dauvier",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+      img: "https://images.pexels.com/photos/13913477/pexels-photo-13913477.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
     },
   ];
 
   return (
     <div className="stories">
       <div className="story">
-          <img src={currentUser.profilePic} alt="" />
+          <img src={"/upload/"+currentUser.profilePic} alt="" />
           <span>{currentUser.name}</span>
           <button>+</button>
       </div>
