@@ -27,13 +27,13 @@ const Profile = () => {
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["user", userId],
-    queryFn: () => makeRequest.get("/users/find/" + userId).then((res) => res.data),
+    queryFn: () => makeRequest.get("/users/find/"+userId).then((res) => res.data),
   });
 
   const { data: relationshipData, isError, rIsLoading } = useQuery({
     queryKey: ["relationship", userId],
     queryFn: () =>
-    makeRequest.get("/relationships?followedUserId=" + userId).then((res) => res.data),
+    makeRequest.get("/relationships?followedUserId="+userId).then((res) => res.data),
   });
   
   if (error) {

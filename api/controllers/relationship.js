@@ -2,7 +2,6 @@
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 export const getRelationships = (req, res) => {
-    console.log('La fonction getRelationships est appelée');
     const q = "SELECT followerUserId FROM relationships WHERE followedUserId = ?";
     
     db.query(q, [req.query.followedUserId], (err, data) => {
@@ -27,7 +26,7 @@ export const addRelationship = (req, res) => {
     
         db.query(q, [values], (err, data) => {
           if (err) return res.status(500).json(err);
-          return res.status(200).json("Suivi ave succès");
+          return res.status(200).json("Suivi avec succès");
         });
     
     });

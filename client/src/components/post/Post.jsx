@@ -16,7 +16,6 @@ import { makeRequest } from "../../axios";
 moment.locale('fr'); 
 
 const Post = ({ post }) => {
-  console.log("post est bien appelé");
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 

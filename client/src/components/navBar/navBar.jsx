@@ -11,27 +11,12 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
-import { useQuery } from "@tanstack/react-query";
-import { makeRequest } from "../../axios"
-import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
 
   const {toggle, darkMode} = useContext(DarkModeContext);
 
   const {currentUser} = useContext(AuthContext);
-  // const userId =  currentUser?.id;
-
-  // const { isLoading, error, data } = useQuery({
-  //   queryKey: ["user", userId],
-  //   queryFn: () => makeRequest.get("/users/find/" + userId).then((res) => res.data),
-  //   enabled: !!userId,
-  // });
-
-  // if (error) {
-  //   console.log("Error:", error);
-  //   return <div>Error: {error.message}</div>;
-  // }
 
   return (
     <div className="navbar">

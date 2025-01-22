@@ -7,18 +7,16 @@ export const getPosts = (req, res) => {
     if(!token) return res.status(401).json("Tu n'es pas connecté!")
     console.log("Token reçu:", token);  // Vérifie si le token est bien reçu
     
-    jwt.verify(token, "secretkey", (err, userInfo)=>{
-        if (err) {
-            console.log("Erreur token:", err);  // Si l'erreur est dans la vérification du token
-            return res.status(403).json("Token pas valide");
-        }
+    jwt.verify(token, "secretkey", (err, userInfo) => {
+        if (err) return res.status(403).json("Token pas valide");
         
-        const q = userId 
-        ? `SELECT p.*, u.id AS userid, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userid) WHERE p.userId = ?`
-        : `SELECT p.*, u.id AS userid, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userid)
-        LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId= ? OR p.userId =?
-        ORDER BY p.createdAt DESC`;
-        const values = userId ? [userId] : [userInfo.id, userInfo.id]
+        const q =
+        userId !== "undefined"
+          ? `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
+          : `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId)
+            LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId= ? OR p.userId =?
+            ORDER BY p.createdAt DESC`;
+        const values = userId!== "undefined" ? [userId] : [userInfo.id, userInfo.id]
        
         db.query(q, values, (err, data) => {
             if (err) {

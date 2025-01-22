@@ -3,33 +3,16 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import Friends from "../../assets/1.png";
 import Groups from "../../assets/2.png";
-import Market from "../../assets/3.png";
 import Watch from "../../assets/4.png";
 import Events from "../../assets/6.png";
 import Gaming from "../../assets/7.png";
 import Gallery from "../../assets/8.png";
 import Videos from "../../assets/9.png";
 import Messages from "../../assets/10.png";
-import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "react-router-dom";
-import { makeRequest } from "../../axios"
 
 const leftBar = () => {
 
   const {currentUser} = useContext(AuthContext);
-
-  // console.log(currentUser ? currentUser.id : 'No user', 'cestca');
-  // const userId =  currentUser?.id;
-
-  // const { isLoading, error, data } = useQuery({
-  //   queryKey: ["user", userId],
-  //   queryFn: () => makeRequest.get("/users/find/" + userId).then((res) => res.data),
-  // });
-
-  // if (error) {
-  //   console.log("Error:", error);
-  //   return <div>Error: {error.message}</div>;
-  // }
 
   return (
     <div className="leftBar">

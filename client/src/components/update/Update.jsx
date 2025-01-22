@@ -8,11 +8,6 @@ export const Update = ({setOpenUpdate, user}) => {
 
     const [cover, setCover] = useState(null);
     const [profile, setProfile] = useState(null);
-    const [texts, setTexts] = useState({
-        name: "",
-        city: "",
-        website: "",
-    });
 
     const upload = async (file) => {
         try {
@@ -36,6 +31,17 @@ export const Update = ({setOpenUpdate, user}) => {
       onSuccess: () => {
         queryClient.invalidateQueries(["user"]);
       },
+    });
+
+    // const { currentUser } = useContext(AuthContext);
+
+    // console.log(user, 'quuuo');
+    // console.log(currentUser.id, 'quuuo2');
+
+    const [texts, setTexts] = useState({
+        name: "",
+        city: "",
+        website: "",
     });
   
     const handleClick = async (e) => {

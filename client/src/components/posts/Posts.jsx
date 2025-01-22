@@ -5,27 +5,23 @@ import './posts.scss';
 import Post from '../post/Post';
 
 const Posts = ({userId}) => {
-  const fetchPosts = async () => {
-    const { data } = await makeRequest.get("/posts?userId" + userId);
-    return data;
-  };
   const { data, error, isLoading } = useQuery({
-    queryKey: ['posts'],
-    queryFn: fetchPosts,
+    queryKey: ['posts', userId],
+    queryFn: 
+    () => makeRequest.get("/posts?userId="+userId).then((res)=>{
+      return res.data;
+    })
   });
 
   console.log(data, 'ok');
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
   return (
     <div className="posts">
       {error
-        ? "Something went wrong!"
+        ? "Quelquechose ne va pas!"
         : isLoading
         ? "loading"
-        : data.map((post) => <Post post={post} />)}
+        : data.map((post) => <Post key={post.id} post={post} />)}
     </div>
   );
 };

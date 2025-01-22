@@ -39,7 +39,9 @@ const register = () => {
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus fugiat, quis perferendis qui sapiente tempore quae veniam dignissimos quia neque! Incidunt quaerat nobis fugit reprehenderit corporis laudantium veritatis! At, vel.
                 </p>
                 <span> Est-ce que tu as un compte ?</span>
-                <button> S'inscrire </button>
+                <Link to="/login">
+                  <button>Se connecter</button>
+                </Link>
             </div>
             <div className="right">
                 <h1> S'inscrire </h1>

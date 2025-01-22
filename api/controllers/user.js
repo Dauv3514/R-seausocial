@@ -16,6 +16,8 @@ export const getUser = (req, res) => {
 export const updateUser = (req, res) => {
     const token = req.cookies.jwt;
     if (!token) return res.status(401).json("Tu n'es pas connecté!");
+    const userId = req.params.userId;
+    console.log(userId, 'testions');
   
     jwt.verify(token, "secretkey", (err, userInfo) => {
       if (err) return res.status(403).json("Token non valide!");
@@ -43,3 +45,43 @@ export const updateUser = (req, res) => {
   
 };
 
+export const getUsersNotFollowedByUser = (req, res) => {
+    const token = req.cookies.jwt;
+    if (!token) return res.status(401).json("Tu n'es pas connecté!");
+    const userId = req.params.userId;
+
+    const q =
+        ` SELECT users.id, users.profilePic, users.name
+          FROM users
+          LEFT JOIN relationships 
+          ON users.id = relationships.followedUserId 
+          AND relationships.followerUserId = ?
+          WHERE relationships.followedUserId IS NULL
+          AND users.id != ?`;
+
+    db.query(q,[userId, userId], (err, data) => {
+        if (err) res.status(500).json(err);
+        return res.status(200).json(data);
+        }
+    );
+};
+
+export const getUsersFollowedByUser = (req, res) => {
+  const token = req.cookies.jwt;
+  if (!token) return res.status(401).json("Tu n'es pas connecté!");
+  const userId = req.params.userId;
+
+  const q =
+      ` SELECT users.id, users.profilePic, users.name
+        FROM users
+        LEFT JOIN relationships 
+        ON users.id = relationships.followedUserId
+        WHERE relationships.followedUserId
+        AND users.id != ?`;
+
+  db.query(q,[userId, userId], (err, data) => {
+      if (err) res.status(500).json(err);
+      return res.status(200).json(data);
+      }
+  );
+};
