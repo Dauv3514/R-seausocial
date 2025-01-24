@@ -46,17 +46,48 @@ export const login = (req, res) => {
 
         const token = jwt.sign({id:data[0].id}, "secretkey")
         const {password, ...others} = data[0];
-        res.cookie("jwt", token, {
-            httpOnly: true,
-        }).status(200).json(others)
+
+        // Mettre à jour isOnline à 1 pour cet utilisateur
+        const updateOnline= "UPDATE users SET isOnline = 1 WHERE id = ?";
+        db.query(updateOnline, [data[0].id], () => {
+            // Si tout va bien, envoyer le cookie et la réponse
+            res.cookie("jwt", token, {
+                httpOnly: true,
+            }).status(200).json(others);
+        });
     });
 }
 
 
 export const logout = (req, res) => {
-    res.clearCookie("jwt",{
-        secure:true,
-        sameSite:"none"
-    }).status(200).json("Déconnexion réussie")
-    
-}
+    // Récupérer le token JWT du cookie
+    const token = req.cookies.jwt;
+
+    // Si pas de token, pas d'utilisateur connecté
+    if (!token) {
+        return res.status(401).json("Utilisateur non authentifié.");
+    }
+
+    jwt.verify(token, "secretkey", (err, data) => {
+        if (err) {
+            return res.status(403).json("Token invalide.");
+        }
+
+        // Récupérer l'ID de l'utilisateur depuis le token
+        const userId = data.id;
+
+        // Mettre à jour la base de données pour définir isOnline à 0
+        const updateOnline = "UPDATE users SET isOnline = 0 WHERE id = ?";
+        db.query(updateOnline, [userId], (updateErr) => {
+            if (updateErr) {
+                return res.status(500).json("Erreur lors de la mise à jour de l'état en ligne.");
+            }
+
+            // Supprimer le cookie JWT
+            res.clearCookie("jwt", {
+                secure: true,
+                sameSite: "none",
+            }).status(200).json("Déconnexion réussie.");
+        });
+    });
+};

@@ -5,66 +5,34 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 
 const rightBar = () => {
-
   const { currentUser } = useContext(AuthContext);
   const userId = currentUser.id;
-  
+
   const queryClient = useQueryClient();
 
-  const { data, isError, rIsLoading } = useQuery({
-    queryKey: ['notFollowed', userId],
-    queryFn: 
-    () => makeRequest.get("/" + userId + "/not-followed").then((res)=>{
-      return res.data;
-    })
-  });
+  // Fonction générique pour les requêtes useQuery
+  const fetchData = (endpoint) =>
+    useQuery({
+      queryKey: [endpoint, userId],
+      queryFn: () =>
+        makeRequest.get(`/users/${userId}/${endpoint}`).then((res) => res.data),
+    });
 
-  const { data : followed } = useQuery({
-    queryKey: ['followed', userId],
-    queryFn: 
-    () => makeRequest.get("/" + userId + "/followed").then((res)=>{
-      return res.data;
-    })
-  });
+  // Obtenez les utilisateurs suivis et non suivis
+  const { data: followed } = fetchData("followed");
+  const { data: notFollowed } = fetchData("not-followed");
 
-  console.log(followed, 'okokok');
-
-  const followerUserId = Array.isArray(data) && data.length > 0 ? data[0].id : null;
-  console.log(followerUserId);
-  const { data: relationshipData } = useQuery({
-    queryKey: ["relationshipp", followerUserId],
-    queryFn: () =>
-      makeRequest.get(`/relationships?followerUserId=${followerUserId}`).then((res) => res.data),
-  });
-
-  console.log(data, 'gggg111');  // Data des utilisateurs
-  console.log(relationshipData, 'gggg222');  // Data des relations
-
+  // Mutation pour suivre un utilisateur
   const mutation = useMutation({
-    mutationFn: () => {
-      return makeRequest.post("/relationships", {userId});
-    },
+    mutationFn: (followerUserId) =>
+      makeRequest.post("/relationships", { userId: followerUserId }),
     onSuccess: () => {
-      // Rafraîchir les données des relations après la mutation
-      queryClient.invalidateQueries(["relationshipp"]);
+      queryClient.invalidateQueries(["notFollowed", userId]);
+      queryClient.invalidateQueries(["followed", userId]);
     },
   });
-  
-  const handleFollow = () => {
-    // Exécute la mutation en envoyant l'ID de l'utilisateur à suivre
-    mutation.mutate(relationshipData.includes(currentUser.id))
-  };
 
-    // const mutation = useMutation({
-  //   mutationFn: () => { 
-  //     return makeRequest.post("/relationships", { userId });
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries(["user"]);
-  //   },
-  // });
-
-  console.log(data, 'cetsok2');
+  const handleFollow = (followerUserId) => mutation.mutate(followerUserId);
 
 
   return (
@@ -72,7 +40,7 @@ const rightBar = () => {
         <div className="container">
           <div className="item">
             <span>Pour vous</span>
-            {data && data.map((user) => (
+            {notFollowed && notFollowed.map((user) => (
             <div className="user" key={user.id}>
               <div className="userInfo">
                 <img
@@ -82,7 +50,7 @@ const rightBar = () => {
                 <span>{user.name}</span>
               </div>
               <div className="buttons">
-                <button onClick={handleFollow}>Suivre</button>
+                <button onClick={() => handleFollow(user.id)}>Suivre</button>
                 <button>Ignorer</button>
               </div>
             </div>
