@@ -15,14 +15,17 @@ export const register = (req, res) => {
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
+        const isOnline = req.body.isOnline === 0;
+
         // Définition de la requête SQL pour insérer un nouvel utilisateur
-        const q = "INSERT INTO users (`username`, `email`, `password`, `name`) VALUES (?)";
+        const q = "INSERT INTO users (`username`, `email`, `password`, `name`, `isOnline`) VALUES (?)";
         // Définition des valeurs à insérer
         const values = [
             req.body.username,
             req.body.email,
             hashedPassword,
-            req.body.name
+            req.body.name,
+            isOnline
         ];
 
         // Exécution de la requête SQL

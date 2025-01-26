@@ -18,9 +18,11 @@ const rightBar = () => {
         makeRequest.get(`/users/${userId}/${endpoint}`).then((res) => res.data),
     });
 
-  // Obtenez les utilisateurs suivis et non suivis
+  // Obtenir les utilisateurs suivis et non suivis
   const { data: followed } = fetchData("followed");
   const { data: notFollowed } = fetchData("not-followed");
+
+  console.log(followed, 'viddd');
 
   // Mutation pour suivre un utilisateur
   const mutation = useMutation({
@@ -33,6 +35,7 @@ const rightBar = () => {
   });
 
   const handleFollow = (followerUserId) => mutation.mutate(followerUserId);
+  const notFollow = (followerUserId) => console.log(followerUserId, `Utilisateur ignoré`);
 
 
   return (
@@ -44,14 +47,14 @@ const rightBar = () => {
             <div className="user" key={user.id}>
               <div className="userInfo">
                 <img
-                  src={user.profilePic}
+                  src={"/upload/"+user.profilePic}
                   alt=""
                 />
                 <span>{user.name}</span>
               </div>
               <div className="buttons">
                 <button onClick={() => handleFollow(user.id)}>Suivre</button>
-                <button>Ignorer</button>
+                <button onClick={() => notFollow(user.Id)}>Ignorer</button>
               </div>
             </div>
             ))}
@@ -60,8 +63,8 @@ const rightBar = () => {
             <span>Mes dernières activités</span>
             <div className="user">
               <div className="userInfo">
-                <img
-                  src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+              <img
+                  src={"/upload/"+ currentUser.profilePic}
                   alt=""
                 />
                 <p>
@@ -73,7 +76,7 @@ const rightBar = () => {
             <div className="user">
               <div className="userInfo">
                 <img
-                  src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                  src={"/upload/"+ currentUser.profilePic}
                   alt=""
                 />
                 <p>
@@ -85,7 +88,7 @@ const rightBar = () => {
             <div className="user">
               <div className="userInfo">
                 <img
-                  src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                  src={"/upload/"+ currentUser.profilePic}
                   alt=""
                 />
                 <p>
@@ -101,7 +104,7 @@ const rightBar = () => {
               <div className="user" key={user.id}>
               <div className="userInfo">
                 <img
-                  src={user.profilePic}
+                  src={"/upload/"+user.profilePic}
                   alt=""
                 />
                 <div className="online" />

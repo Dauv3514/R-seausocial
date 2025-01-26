@@ -33,7 +33,7 @@ export const addComment = (req, res) => {
             req.body.desc,
             userInfo.id,
             moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-            req.body.postId.postId
+            req.body.postId
         ];
 
         console.log(values, 'valeurs');

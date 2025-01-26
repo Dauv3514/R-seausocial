@@ -23,8 +23,6 @@ const Profile = () => {
 
   const userId = parseInt(useLocation().pathname.split("/")[2]);
 
-  console.log(userId,'ouioui');
-
   const { isLoading, error, data } = useQuery({
     queryKey: ["user", userId],
     queryFn: () => makeRequest.get("/users/find/"+userId).then((res) => res.data),

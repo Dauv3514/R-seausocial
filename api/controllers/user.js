@@ -71,15 +71,14 @@ export const getUsersFollowedByUser = (req, res) => {
   if (!token) return res.status(401).json("Tu n'es pas connecté!");
   const userId = req.params.userId;
 
-  console.log(userId, 'juju');
-
   const q =
       ` SELECT users.id, users.profilePic, users.name
         FROM users
         LEFT JOIN relationships 
         ON users.id = relationships.followedUserId
         WHERE relationships.followedUserId
-        AND users.id != ?`;
+        AND users.id != ?
+        AND users.isOnline = 1`;
 
   db.query(q,[userId, userId], (err, data) => {
       if (err) res.status(500).json(err);

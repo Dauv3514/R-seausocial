@@ -60,7 +60,7 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <img src={"/upload/" + post.profilePic} alt="" />
             <div className="details">
               <Link
                 to={`/profile/${post.userid}`}
@@ -84,11 +84,11 @@ const Post = ({ post }) => {
             <FavoriteOutlinedIcon style={{color:"red"}} onClick={handleLike}/>
             : <FavoriteBorderOutlinedIcon onClick={handleLike}/>
             }
-            {Array.isArray(data) ? data.length : 0} Likes
+            {Array.isArray(data) ? data.length : 0} Like
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
-            12 Commentaires
+            1 Commentaire
           </div>
           <div className="item">
             <ShareOutlinedIcon />
