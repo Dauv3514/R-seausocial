@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 
 export const getUser = (req, res) => {
   const userId = req.params.userId;
-  console.log(userId, 'testions');
   const q = "SELECT * FROM users WHERE id = ?";
 
   db.query(q, [userId], (err, data) => {
@@ -17,7 +16,6 @@ export const updateUser = (req, res) => {
     const token = req.cookies.jwt;
     if (!token) return res.status(401).json("Tu n'es pas connecté!");
     const userId = req.params.userId;
-    console.log(userId, 'testions');
   
     jwt.verify(token, "secretkey", (err, userInfo) => {
       if (err) return res.status(403).json("Token non valide!");
@@ -82,8 +80,7 @@ export const getUsersFollowedByUser = (req, res) => {
 
   db.query(q,[userId, userId], (err, data) => {
       if (err) res.status(500).json(err);
-      console.log(data, 'rezrzeff')
-      return res.status(200).json(data);
+        return res.status(200).json(data);
       }
   );
 };

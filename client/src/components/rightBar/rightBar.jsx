@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { makeRequest } from '../../axios';
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
+import moment from "moment";
 
 const rightBar = () => {
   const { currentUser } = useContext(AuthContext);
@@ -22,8 +23,6 @@ const rightBar = () => {
   const { data: followed } = fetchData("followed");
   const { data: notFollowed } = fetchData("not-followed");
 
-  console.log(followed, 'viddd');
-
   // Mutation pour suivre un utilisateur
   const mutation = useMutation({
     mutationFn: (followerUserId) =>
@@ -37,6 +36,16 @@ const rightBar = () => {
   const handleFollow = (followerUserId) => mutation.mutate(followerUserId);
   const notFollow = (followerUserId) => console.log(followerUserId, `Utilisateur ignoré`);
 
+  const { isLoading, error, data} = useQuery({
+    queryKey: ["activities", userId],
+    queryFn: () => makeRequest.get("/activities/" + userId).then((res) => res.data),
+  });
+
+  const messages = {
+    like_post: 'a liké un nouveau post',
+    has_published: 'a publié un nouveau post',
+    follow_newUser: 'a suivi un nouvel utilisateur'
+  };
 
   return (
       <div className="rightBar">
@@ -60,43 +69,25 @@ const rightBar = () => {
             ))}
           </div>
           <div className="item">
-            <span>Mes dernières activités</span>
-            <div className="user">
-              <div className="userInfo">
-              <img
-                  src={"/upload/"+ currentUser.profilePic}
-                  alt=""
-                />
-                <p>
-                  <span>Valentin Dauvier</span> a changé sa photo de couverture
-                </p>
-              </div>
-              <span>Il y a 1 min</span>
-            </div>
-            <div className="user">
-              <div className="userInfo">
-                <img
-                  src={"/upload/"+ currentUser.profilePic}
-                  alt=""
-                />
-                <p>
-                  <span>Valentin Dauvier</span> a liké un post
-                </p>
-              </div>
-              <span>Il y a 1 min</span>
-            </div>
-            <div className="user">
-              <div className="userInfo">
-                <img
-                  src={"/upload/"+ currentUser.profilePic}
-                  alt=""
-                />
-                <p>
-                  <span>Valentin Dauvier</span> a publié
-                </p>
-              </div>
-              <span>Il y a 1 min</span>
-            </div>
+          <span>Mes dernières activités</span>
+            {isLoading ? (
+              <p>Chargement...</p>
+            ) : error ? (
+              <p>Erreur</p>
+            ) : (
+              data.map((activity) => (
+                <div className="user" key={activity.id}>
+                  <div className="userInfo">
+                    <img src={"/upload/" + currentUser.profilePic} alt="" />
+                    <p>
+                      <span>{currentUser.username}</span>
+                      {messages[activity.activities]}
+                    </p>
+                  </div>
+                  <span>{moment(activity.createdAt).fromNow()}</span>
+                </div>
+              ))
+            )}
           </div>
           <div className="item">
             <span>Amis en ligne</span>

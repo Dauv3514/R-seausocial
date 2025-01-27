@@ -1,11 +1,11 @@
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 import moment from "moment";
+
 export const getPosts = (req, res) => {
     const userId = req.query.userId;
     const token = req.cookies.jwt;
     if(!token) return res.status(401).json("Tu n'es pas connecté!")
-    console.log("Token reçu:", token);  // Vérifie si le token est bien reçu
     
     jwt.verify(token, "secretkey", (err, userInfo) => {
         if (err) return res.status(403).json("Token pas valide");
@@ -20,10 +20,10 @@ export const getPosts = (req, res) => {
        
         db.query(q, values, (err, data) => {
             if (err) {
-                console.log("Erreur requête SQL:", err);  // Affiche l'erreur SQL si elle se produit
+                console.log("Erreur requête SQL:", err);
                 return res.status(500).json(err);
             }
-            console.log("Résultats de la requête:", data);  // Vérifie les résultats retournés par la requête
+            console.log("Résultats de la requête:", data);
             return res.status(200).json(data);
         });
     });
@@ -40,20 +40,30 @@ export const addPost = (req, res) => {
         
         const q = "INSERT INTO posts (`desc`, `img`, `createdAt`,`userId`) VALUES (?)";
         
+        const userid = userInfo.id;
         const values = [
             req.body.desc,
             req.body.img,
             moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-            userInfo.id
+            userid
         ];
         
         db.query(q, [values], (err, data) => {
             if (err) {
-                console.log("Erreur requête SQL:", err);  // Affiche l'erreur SQL si elle se produit
+                console.log("Erreur requête SQL:", err);
                 return res.status(500).json(err);
             }
-            console.log("Résultats de la requête:", data);  // Vérifie les résultats retournés par la requête
-            return res.status(200).json("La publication a été crée");
+            
+            const activityQuery = "INSERT INTO activities (`user_id`, `activities`, `createdAt`) VALUES (?, ?, ?)";
+            const activityValues = [userid, 'has_published', moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")];
+
+            db.query(activityQuery, activityValues, (err, data) => {
+                if (err) {
+                    return res.status(500).json(err);
+                }
+                console.log("Résultats de la requête:", data);
+                return res.status(200).json("La publication a été crée et l'activité ajoutée.");
+            });
         });
     });
 }

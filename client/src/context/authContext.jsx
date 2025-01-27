@@ -5,7 +5,6 @@ export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(() => {
         const storedUser = localStorage.getItem("user");
-        console.log("Initial storedUser:", storedUser);
         return storedUser ? JSON.parse(storedUser) : null;
       });
 
@@ -15,10 +14,10 @@ export const AuthContextProvider = ({ children }) => {
             withCredentials: true,
         });
         setCurrentUser(res.data);
-        return res; // Assurez-vous de renvoyer la réponse
+        return res;
     } catch (err) {
         console.error("Erreur dans la fonction login:", err);
-        throw err; // Renvoyer l'erreur pour qu'elle soit capturée par handleLogin
+        throw err;
     }
   };
 

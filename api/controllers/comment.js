@@ -40,10 +40,9 @@ export const addComment = (req, res) => {
         
         db.query(q, [values], (err, data) => {
             if (err) {
-                console.log("Erreur SQL:", err);  // Ajoutez un log pour l'erreur SQL
                 return res.status(500).json(err);
             }
-            console.log("Données insérées:", data);  // Log des données retournées
+            console.log("Données insérées:", data);
             return res.status(200).json("Le commentaire a été crée");
         });
     });

@@ -33,11 +33,6 @@ export const Update = ({setOpenUpdate, user}) => {
       },
     });
 
-    // const { currentUser } = useContext(AuthContext);
-
-    // console.log(user, 'quuuo');
-    // console.log(currentUser.id, 'quuuo2');
-
     const [texts, setTexts] = useState({
         name: "",
         city: "",

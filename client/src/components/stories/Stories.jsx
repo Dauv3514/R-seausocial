@@ -6,7 +6,6 @@ const Stories = () => {
 
   const {currentUser} = useContext(AuthContext)
 
-  //TEMPORARY
   const stories = [
     {
       id: 1,

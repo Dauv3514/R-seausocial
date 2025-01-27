@@ -1,6 +1,8 @@
 
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
+import moment from "moment";
+
 export const getRelationships = (req, res) => {
     const q = "SELECT followerUserId FROM relationships WHERE followedUserId = ?";
     
@@ -26,7 +28,17 @@ export const addRelationship = (req, res) => {
     
         db.query(q, [values], (err, data) => {
           if (err) return res.status(500).json(err);
-          return res.status(200).json("Suivi avec succès");
+
+            const activityQuery = "INSERT INTO activities (`user_id`, `activities`, `createdAt`) VALUES (?, ?, ?)";
+            const activityValues = [userInfo.id, 'follow_newUser', moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")];
+
+            db.query(activityQuery, activityValues, (err, data) => {
+                if (err) {
+                    return res.status(500).json(err);
+                }
+                return res.status(200).json("Suivi avec succès");
+            });
+
         });
     
     });

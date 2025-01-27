@@ -28,39 +28,6 @@ const Comments = ({postId}) => {
     mutation.mutate({desc, postId});
     setDesc("");
   };
-  // const [desc, setDesc] = useState("");
-  // const { currentUser } = useContext(AuthContext);
-
-  // const fetchComments = async () => {
-  //   const { data } = await makeRequest.get('comments');
-  //   return data;
-  // };
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ["comments?postId=" + postId],
-  //   queryFn: fetchComments,
-  // });;
-
-  // if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error.message}</div>;
-
-  // const queryClient = useQueryClient();
-
-  // const mutation = useMutation({
-  //   mutationFn: (newComment) => makeRequest.post("/comments", newComment),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries(["comments"]);
-  //   },
-  // });
-
-  // const handleClick = async (e) => {
-  //   e.preventDefault();
-  //   let imgUrl = "";
-  //   mutation.mutate({ desc, postId });
-  //   setDesc("");
-  //   setFile(null);
-  // };
-
-  console.log(data, 'ok');
   
   return (
     <div className="comments">

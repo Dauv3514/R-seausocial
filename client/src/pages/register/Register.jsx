@@ -23,7 +23,6 @@ const register = () => {
     try {
       await axios.post("http://localhost:8800/api/auth/register", inputs);
     } catch (err) {
-      // setError(err.response ? err.response.data : "Une erreur s'est produite");
       setErr(err.response.data);
       console.log(err.response);
     }
